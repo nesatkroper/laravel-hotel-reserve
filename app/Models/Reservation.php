@@ -26,4 +26,9 @@ class Reservation extends Model
         'memo',
         'is_hidden'
     ];
+
+    public function rooms()
+    {
+        return $this->belongsTo(Room::class, 'room_id', 'room_id');
+    }
 }
