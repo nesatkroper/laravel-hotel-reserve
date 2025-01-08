@@ -91,7 +91,7 @@ class ReservationDetailController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ReservationDetail $reservationDetail)
+    public function show($rdetails)
     {
         //
         try {
@@ -99,7 +99,7 @@ class ReservationDetailController extends Controller
                 ->with('reservations')
                 ->with('employees')
                 ->with('customers')
-                ->findOrFail($reservationDetail->reservation_id);
+                ->findOrFail($rdetails);
 
             return response()->json(
                 [
@@ -121,11 +121,11 @@ class ReservationDetailController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ReservationDetail $reservationDetail)
+    public function update(Request $request,  $rdetails)
     {
         //
         try {
-            $rdetails = $reservationDetail::findOrFail($reservationDetail->reservation_detail_id);
+            $rdetails = ReservationDetail::findOrFail($rdetails);
             $rdetails->update(
                 [
                     'reservation_id' => $request->reservation_id,
@@ -164,8 +164,27 @@ class ReservationDetailController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ReservationDetail $reservationDetail)
+    public function destroy($rdetail)
     {
         //
+        try {
+            $rdetails = ReservationDetail::findOrFail($rdetail);
+            $rdetails->delete();
+
+            return response()->json(
+                [
+                    'status' => true,
+                    'message' => 'Deleted Successfully',
+                    'data' => $rdetails
+                ]
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 }
