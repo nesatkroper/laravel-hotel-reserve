@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use App\Models\RoomPicture;
 use Illuminate\Http\Request;
 
-class CustomerController extends Controller
+class RoomPictureController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,16 +14,14 @@ class CustomerController extends Controller
     {
         //
         try {
-            $customers = Customer::with('reservations')
-                ->with('auth')
-                ->where("account_status", '=', 'available')
+            $rpicture = RoomPicture::with('rooms')
                 ->get();
 
-            if ($customers != '[]')
+            if ($rpicture != '[]')
                 return response()->json(
                     [
                         'status' => true,
-                        'data' => $customers
+                        'data' => $rpicture
                     ]
                 );
 
@@ -50,38 +48,30 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         //
-        try {
-            if ($request->hasFile('picture')) {
-                $file = $request->file('picture');
-                $filename = 'customer' .  time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('images/customer'), $filename);
-                $request->merge(
-                    ['picture' => $filename]
-                );
-            }
+        if ($request->hasFile('picture')) {
+            $file = $request->file('picture');
+            $filename = 'rooms' .  time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/rooms'), $filename);
+            $request->merge(
+                ['picture' => $filename]
+            );
+        }
 
-            $customers = Customer::create(
+        try {
+            $rpicture = RoomPicture::create(
                 [
-                    'auth_id' => $request->auth_id,
-                    'account_status' => $request->account_status,
-                    'first_name' => $request->first_name,
-                    'last_name' => $request->last_name,
-                    'picture' => $request->picture,
-                    'gender' => $request->gender,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'address' => $request->address,
-                    'city' => $request->city,
-                    'status' => $request->status,
+                    'room_id' => $request->room_id,
+                    'picture_name' => $request->picture_name,
+                    'picture' => $request->picture
                 ]
             );
 
-            if (isset($customers))
+            if (isset($rpicture))
                 return response()->json(
                     [
                         'status' => true,
                         'message' => 'Created Successfully',
-                        'data' => $customers
+                        'data' => $rpicture
                     ]
                 );
 
@@ -105,19 +95,17 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show(RoomPicture $roomPicture)
     {
         //
         try {
-            $customers = Customer::with('reservations')
-                ->with('auth')
-                ->where("account_status", '=', 'available')
-                ->findOrFail($customer->customer_id);
+            $rpicture = RoomPicture::with('rooms')
+                ->findOrFail($roomPicture->room_picture_id);
 
             return response()->json(
                 [
                     'status' => true,
-                    'data' => $customers
+                    'data' => $rpicture
                 ]
             );
         } catch (\Exception $e) {
@@ -133,40 +121,35 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, RoomPicture $roomPicture)
     {
         //
-        try {
-            $customers = Customer::findOrFail($customer->customer_id);
 
-            $picture = $customers->picture;
+
+        try {
+            $rpicture = RoomPicture::findOrFail($roomPicture->room_picture_id);
+
+            $picture = $rpicture->picture;
             if ($request->hasFile('picture')) {
                 $file = $request->file('picture');
-                $filename = 'customer' . time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('images/customer'), $filename);
+                $filename = 'rooms' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images/rooms'), $filename);
                 $picture = $filename;
             }
-            $customers->update(
+
+            $rpicture->update(
                 [
-                    'auth_id' => $request->auth_id,
-                    'account_status' => $request->account_status,
-                    'first_name' => $request->first_name,
-                    'last_name' => $request->last_name,
-                    'picture' => $picture,
-                    'gender' => $request->gender,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'address' => $request->address,
-                    'city' => $request->city,
-                    'status' => $request->status,
+                    'room_id' => $request->room_id,
+                    'picture_name' => $request->picture_name,
+                    'picture' => $picture
                 ]
             );
 
             return response()->json(
                 [
                     'status' => true,
-                    'message' => 'Updated Successfully',
-                    'data' => $customers
+                    'message' => 'Created Successfully',
+                    'data' => $rpicture
                 ]
             );
         } catch (\Exception $e) {
@@ -182,18 +165,18 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(RoomPicture $roomPicture)
     {
         //
         try {
-            $customers = Customer::findOrFail($customer->room_picture_id);
-            $customers->delete();
+            $rpicture = RoomPicture::findOrFail($roomPicture->room_picture_id);
+            $rpicture->delete();
 
             return response()->json(
                 [
                     'status' => true,
                     'message' => 'Deleted Successfully',
-                    'data' => $customers
+                    'data' => $rpicture
                 ]
             );
         } catch (\Exception $e) {

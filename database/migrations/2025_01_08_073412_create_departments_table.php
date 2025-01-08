@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('group_picture_tbl', function (Blueprint $table) {
-            $table->id('group_picture_id');
-            $table->integer('parent_id');
-            $table->string('picture_name')->nullable();
-            $table->string('picture');
+        Schema::create('department_tbl', function (Blueprint $table) {
+            $table->id('department_id');
+            $table->string('department_name')->nullable();
+            $table->string('department_code')->nullable();
+            $table->string('memo')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('group_pictures');
+        Schema::dropIfExists('departments');
     }
 };

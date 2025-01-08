@@ -29,4 +29,14 @@ class Employee extends Model
         'salary',
         'hired_date'
     ];
+
+    public function reservations()
+    {
+        return $this->belongsTo(Reservation::class, 'employee_id', 'employee_id');
+    }
+
+    public function auth()
+    {
+        return $this->belongsTo(User::class, 'id', 'employee_id');
+    }
 }

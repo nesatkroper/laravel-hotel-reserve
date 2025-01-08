@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('reservation_tbl', function (Blueprint $table) {
             $table->id("reservation_id");
             $table->bigInteger('room_id');
+            $table->bigInteger('employee_id')->nullable();
             $table->bigInteger('customer_id')->nullable();
             $table->date('checkin_date');
             $table->date('checkout_date');

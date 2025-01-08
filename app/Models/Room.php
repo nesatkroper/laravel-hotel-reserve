@@ -15,7 +15,6 @@ class Room extends Model
         'room_type',
         'room_name',
         'picture',
-        'group_picture_id',
         'price',
         'is_ac',
         'capacity',
@@ -30,8 +29,8 @@ class Room extends Model
         return $this->hasMany(Reservation::class, 'room_id', 'room_id');
     }
 
-    public function group_pictures()
+    public function room_pictures()
     {
-        return $this->hasMany(GroupPicture::class, 'group_picture_id', 'parent_id');
+        return $this->hasMany(RoomPicture::class, 'room_id', 'room_id');
     }
 }

@@ -24,4 +24,14 @@ class Customer extends Model
         'city',
         'state',
     ];
+
+    public function reservations()
+    {
+        return $this->belongsTo(Reservation::class, 'customer_id', 'customer_id');
+    }
+
+    public function auth()
+    {
+        return $this->belongsTo(User::class, 'id', 'customer_id');
+    }
 }

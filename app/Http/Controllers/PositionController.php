@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
+use App\Models\Position;
 use Illuminate\Http\Request;
 
-class RoomController extends Controller
+class PositionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,15 +14,14 @@ class RoomController extends Controller
     {
         //
         try {
-            $rooms = Room::with('room_pictures')
-                ->with('reservations')
+            $positions = Position::with('departments')
                 ->get();
 
-            if ($rooms != '[]')
+            if ($positions != '[]')
                 return response()->json(
                     [
                         'status' => true,
-                        'data' => $rooms
+                        'data' => $positions
                     ]
                 );
 
@@ -50,26 +49,21 @@ class RoomController extends Controller
     {
         //
         try {
-            $rooms = Room::create(
+            $positions = Position::create(
                 [
-                    'room_type' => $request->room_type,
-                    'room_name' => 'ROOM-' . sprintf('%03d', $request->room_name),
-                    'price' => $request->price,
-                    'is_ac' => $request->is_ac,
-                    'capacity' => $request->capacity,
-                    'size' => $request->size,
-                    'discount_rate' => $request->discount_rate,
-                    'is_booked' => $request->is_booked,
-                    'status' => $request->status,
+                    'department_id' => $request->department_id,
+                    'position_name' => $request->position_name,
+                    'position_code' => 'POS-' . sprintf('%03d', $request->position_code),
+                    'memo' => $request->memo
                 ]
             );
 
-            if (isset($rooms))
+            if (isset($positions))
                 return response()->json(
                     [
                         'status' => true,
                         'message' => 'Created Successfully',
-                        'data' => $rooms
+                        'data' => $positions
                     ]
                 );
 
@@ -93,18 +87,17 @@ class RoomController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Room $room)
+    public function show(Position $position)
     {
         //
         try {
-            $rooms = Room::with('room_pictures')
-                ->with('reservations')
-                ->findOrFail($room->room_id);
+            $positions = Position::with('departments')
+                ->findOrFail($position->position_id);
 
             return response()->json(
                 [
                     'status' => true,
-                    'data' => $rooms
+                    'data' => $positions
                 ]
             );
         } catch (\Exception $e) {
@@ -120,31 +113,26 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, Position $position)
     {
         //
         try {
-            $rooms = Room::findOrFail($room->room_id);
-            $rooms->update(
+            $positions = Position::findOrFail($position->position_id);
+
+            $positions->update(
                 [
-                    'room_type' => $request->room_type,
-                    'room_name' => 'ROOM-' . sprintf('%03d', $request->room_name),
-                    'price' => $request->price,
-                    'is_ac' => $request->is_ac,
-                    'capacity' => $request->capacity,
-                    'size' => $request->size,
-                    'discount_rate' => $request->discount_rate,
-                    'is_booked' => $request->is_booked,
-                    'status' => $request->status,
+                    'position_name' => $request->position_name,
+                    'position_code' => 'POS-' . sprintf('%03d', $request->position_code),
+                    'memo' => $request->memo
                 ]
             );
 
-            if (isset($rooms))
+            if (isset($positions))
                 return response()->json(
                     [
                         'status' => true,
-                        'message' => 'Updated Successfully',
-                        'data' => $rooms
+                        'message' => 'Update Successfully',
+                        'data' => $positions
                     ]
                 );
 
@@ -168,18 +156,18 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Room $room)
+    public function destroy(Position $position)
     {
         //
         try {
-            $rooms = Room::findOrFail($room->room_id);
-            $rooms->delete();
+            $positions = Position::findOrFail($position->position_id);
+            $positions->delete();
 
             return response()->json(
                 [
                     'status' => true,
                     'message' => 'Deleted Successfully',
-                    'data' => $rooms
+                    'data' => $positions
                 ]
             );
         } catch (\Exception $e) {

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id('room_id');
             $table->enum('room_type', ['single', 'double', 'suite'])->default('single');
             $table->string('room_name')->nullable();
-            $table->integer('group_picture')->nullable();
             $table->decimal('price', 10, 2);
             $table->enum('is_ac', ['true', 'false'])->default('true');
             $table->integer('capacity')->default(4);

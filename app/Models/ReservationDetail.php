@@ -4,29 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Reservation extends Model
+class ReservationDetail extends Model
 {
     //
-    protected $table = 'reservation_tbl';
+    protected $table = 'reservation_detail_tbl';
 
-    protected $primaryKey = 'reservation_id';
+    protected $primaryKey = 'reservation_detail_id';
 
     protected $fillable = [
+        'reservation_id',
         'room_id',
         'employee_id',
         'customer_id',
-        'checkin_date',
-        'checkout_date',
-        'is_checkin',
-        'is_checkout',
-        'reservation_type',
-        'adults',
-        'children',
-        'payment_status',
-        'payment_method',
-        'memo',
-        'is_hidden'
+        'memo'
     ];
+
+    public function reservations()
+    {
+        return $this->belongsTo(Reservation::class, 'reservation_id', 'reservation_id');
+    }
 
     public function rooms()
     {

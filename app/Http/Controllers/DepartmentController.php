@@ -2,27 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
-class RoomController extends Controller
+class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
         try {
-            $rooms = Room::with('room_pictures')
-                ->with('reservations')
+            $departments = Department::with('positions')
                 ->get();
 
-            if ($rooms != '[]')
+            if ($departments != '[]')
                 return response()->json(
                     [
                         'status' => true,
-                        'data' => $rooms
+                        'data' => $departments
                     ]
                 );
 
@@ -48,28 +46,21 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        //
         try {
-            $rooms = Room::create(
+            $departments = Department::create(
                 [
-                    'room_type' => $request->room_type,
-                    'room_name' => 'ROOM-' . sprintf('%03d', $request->room_name),
-                    'price' => $request->price,
-                    'is_ac' => $request->is_ac,
-                    'capacity' => $request->capacity,
-                    'size' => $request->size,
-                    'discount_rate' => $request->discount_rate,
-                    'is_booked' => $request->is_booked,
-                    'status' => $request->status,
+                    'department_name' => $request->department_name,
+                    'department_code' => 'DEP-' . sprintf('%03d', $request->department_code),
+                    'memo' => $request->memo
                 ]
             );
 
-            if (isset($rooms))
+            if (isset($departments))
                 return response()->json(
                     [
                         'status' => true,
                         'message' => 'Created Successfully',
-                        'data' => $rooms
+                        'data' => $departments
                     ]
                 );
 
@@ -93,18 +84,17 @@ class RoomController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Room $room)
+    public function show(Department $department)
     {
         //
         try {
-            $rooms = Room::with('room_pictures')
-                ->with('reservations')
-                ->findOrFail($room->room_id);
+            $departments = Department::with('positions')
+                ->findOrFail($department->department_id);
 
             return response()->json(
                 [
                     'status' => true,
-                    'data' => $rooms
+                    'data' => $departments
                 ]
             );
         } catch (\Exception $e) {
@@ -120,31 +110,26 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, Department $department)
     {
         //
         try {
-            $rooms = Room::findOrFail($room->room_id);
-            $rooms->update(
+            $departments = Department::findOrFail($department->department_id);
+
+            $departments->update(
                 [
-                    'room_type' => $request->room_type,
-                    'room_name' => 'ROOM-' . sprintf('%03d', $request->room_name),
-                    'price' => $request->price,
-                    'is_ac' => $request->is_ac,
-                    'capacity' => $request->capacity,
-                    'size' => $request->size,
-                    'discount_rate' => $request->discount_rate,
-                    'is_booked' => $request->is_booked,
-                    'status' => $request->status,
+                    'department_name' => $request->department_name,
+                    'department_code' => 'DEP-' . sprintf('%03d', $request->department_code),
+                    'memo' => $request->memo
                 ]
             );
 
-            if (isset($rooms))
+            if (isset($departments))
                 return response()->json(
                     [
                         'status' => true,
-                        'message' => 'Updated Successfully',
-                        'data' => $rooms
+                        'message' => 'Update Successfully',
+                        'data' => $departments
                     ]
                 );
 
@@ -168,18 +153,18 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Room $room)
+    public function destroy(Department $department)
     {
         //
         try {
-            $rooms = Room::findOrFail($room->room_id);
-            $rooms->delete();
+            $departments = Department::findOrFail($department->department_id);
+            $departments->delete();
 
             return response()->json(
                 [
                     'status' => true,
                     'message' => 'Deleted Successfully',
-                    'data' => $rooms
+                    'data' => $departments
                 ]
             );
         } catch (\Exception $e) {
