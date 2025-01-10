@@ -91,7 +91,7 @@ class ReservationDetailController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($rdetails)
+    public function show(ReservationDetail $reservationDetail)
     {
         //
         try {
@@ -99,7 +99,7 @@ class ReservationDetailController extends Controller
                 ->with('reservations')
                 ->with('employees')
                 ->with('customers')
-                ->findOrFail($rdetails);
+                ->findOrFail($reservationDetail->reservation_detail_id);
 
             return response()->json(
                 [
@@ -121,11 +121,11 @@ class ReservationDetailController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,  $rdetails)
+    public function update(Request $request, ReservationDetail $reservationDetail)
     {
         //
         try {
-            $rdetails = ReservationDetail::findOrFail($rdetails);
+            $rdetails = ReservationDetail::findOrFail($reservationDetail->reservation_detail_id);
             $rdetails->update(
                 [
                     'reservation_id' => $request->reservation_id,
@@ -135,7 +135,7 @@ class ReservationDetailController extends Controller
                 ]
             );
 
-            if (isset($rdetails))
+            if ($rdetails)
                 return response()->json(
                     [
                         'status' => true,
@@ -164,11 +164,11 @@ class ReservationDetailController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($rdetail)
+    public function destroy(ReservationDetail $reservationDetail)
     {
         //
         try {
-            $rdetails = ReservationDetail::findOrFail($rdetail);
+            $rdetails = ReservationDetail::findOrFail($reservationDetail->reservation_detail_id);
             $rdetails->delete();
 
             return response()->json(

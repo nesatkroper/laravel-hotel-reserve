@@ -13,14 +13,34 @@ class ProductController extends Controller
     public function index()
     {
         //
-    }
+        try {
+            $products = Product::with('categories')
+                ->where('status', '=', 'true')
+                ->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+            if ($products != '[]')
+                return response()->json(
+                    [
+                        'status' => true,
+                        'data' => $products
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'No data'
+                    ]
+                );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     /**
@@ -29,6 +49,52 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //
+        try {
+            if ($request->hasFile('picture')) {
+                $file = $request->file('picture');
+                $filename = 'product' .  time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images/product'), $filename);
+                $request->merge(
+                    ['picture' => $filename]
+                );
+            }
+
+            $products = Product::create(
+                [
+                    'product_name' => $request->product_name,
+                    'product_code' => 'PROD-' . sprintf('%03d', $request->product_code),
+                    'product_category_id' => $request->product_category_id,
+                    'picture' => $request->picture,
+                    'price' => $request->price,
+                    'discount_rate' => $request->discount_rate,
+                    'status' => $request->status,
+                ]
+            );
+
+            if ($products)
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Created Successfully',
+                        'data' => $products
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => false,
+                        'message' => 'failed'
+                    ]
+                );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     /**
@@ -37,14 +103,25 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         //
-    }
+        try {
+            $products = Product::with('categories')
+                ->where('status', 'true')
+                ->findOrFail($product->product_id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
-    {
-        //
+            return response()->json(
+                [
+                    'status' => true,
+                    'data' => $products
+                ]
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     /**
@@ -53,6 +130,56 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         //
+        try {
+            $products = Product::findOrFail($product->product_id);
+            $picture = $products->picture;
+            if ($request->hasFile('picture')) {
+                $file = $request->file('picture');
+                $filename = 'product' .  time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images/product'), $filename);
+                $request->merge(
+                    [
+                        'picture' => $filename
+                    ]
+                );
+            }
+
+            $products->update(
+                [
+                    'product_name' => $request->product_name,
+                    'product_code' => 'PROD-' . sprintf('%03d', $request->product_code),
+                    'product_category_id' => $request->product_category_id,
+                    'picture' => $request->picture,
+                    'price' => $request->price,
+                    'discount_rate' => $request->discount_rate,
+                    'status' => $request->status,
+                ]
+            );
+
+            if ($products)
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Updated Successfully',
+                        'data' => $products
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => false,
+                        'message' => 'failed'
+                    ]
+                );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     /**
@@ -61,5 +188,33 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+        try {
+            $products = Product::findOrFail($product->product_id);
+            $products->delete();
+
+            if ($products)
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Deleted Successfully',
+                        'data' => $products
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => false,
+                        'message' => 'failed'
+                    ]
+                );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 }

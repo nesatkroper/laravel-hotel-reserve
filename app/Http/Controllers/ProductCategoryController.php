@@ -86,12 +86,12 @@ class ProductCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductCategory $product_category_id)
+    public function show(ProductCategory $productCategory)
     {
         //
         try {
             $pcategories = ProductCategory::with('products')
-                ->find($product_category_id->product_category_id);
+                ->find($productCategory->product_category_id);
 
             return response()->json(
                 [
@@ -110,19 +110,45 @@ class ProductCategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ProductCategory $productCategory)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, ProductCategory $productCategory)
     {
         //
+        try {
+            $pcategory = ProductCategory::findOrFail($productCategory->product_category_id);
+            $pcategory->update(
+                [
+                    'category_name' => $request->category_name,
+                    'category_code' => 'CATE-' . sprintf('%03d',  $request->category_code),
+                    'memo' => $request->memo,
+                ]
+            );
+
+            if ($pcategory)
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Updated Successfully',
+                        'data' => $pcategory
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => false,
+                        'message' => 'failed'
+                    ]
+                );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     /**
@@ -131,5 +157,33 @@ class ProductCategoryController extends Controller
     public function destroy(ProductCategory $productCategory)
     {
         //
+        try {
+            $pcategory = ProductCategory::findOrFail($productCategory->product_category_id);
+            $pcategory->delete();
+
+            if ($pcategory)
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Delete Successfully',
+                        'data' => $pcategory
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => false,
+                        'message' => 'failed'
+                    ]
+                );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 }

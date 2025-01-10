@@ -24,11 +24,11 @@ ro::get('/', function () {
 
 ro::apiResource('/reservation', ReservationController::class);
 ro::apiResource('/room', RoomController::class);
-ro::apiResource('/rpicture', RoomPictureController::class);
+ro::apiResource('/room-picture', RoomPictureController::class);
 ro::apiResource('/department', DepartmentController::class);
 ro::apiResource('/position', PositionController::class);
 ro::apiResource('/customer', CustomerController::class);
 ro::apiResource('/employee', EmployeeController::class);
-ro::apiResource('/rdetail', ReservationDetailController::class);
-ro::apiResource('/product', ProductController::class);
+ro::apiResource('/reservation-detail', ReservationDetailController::class);
+ro::apiResource('/products', ProductController::class);
 ro::apiResource('/product-category', ProductCategoryController::class);
