@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
+use App\Models\SaleDetail;
 use Illuminate\Http\Request;
 
-class RoomController extends Controller
+class SaleDetailController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,17 +14,17 @@ class RoomController extends Controller
     {
         //
         try {
-            $rooms = Room::with([
-                'room_pictures',
-                'reservations'
+            $sdetails = SaleDetail::with([
+                'sales',
+                'products',
             ])
                 ->get();
 
-            if ($rooms != '[]')
+            if ($sdetails != '[]')
                 return response()->json(
                     [
                         'status' => true,
-                        'data' => $rooms
+                        'data' => $sdetails
                     ]
                 );
 
@@ -52,26 +52,21 @@ class RoomController extends Controller
     {
         //
         try {
-            $rooms = Room::create(
+            $sdetails = SaleDetail::create(
                 [
-                    'room_type' => $request->room_type,
-                    'room_name' => 'ROOM-' . sprintf('%03d', $request->room_name),
-                    'price' => $request->price,
-                    'is_ac' => $request->is_ac,
-                    'capacity' => $request->capacity,
-                    'size' => $request->size,
-                    'discount_rate' => $request->discount_rate,
-                    'is_booked' => $request->is_booked,
-                    'status' => $request->status,
+                    'sale_id' => $request->sale_id,
+                    'product_id' => $request->product_id,
+                    'quantity' => $request->quantity,
+                    'amount' => $request->amount,
                 ]
             );
 
-            if (isset($rooms))
+            if ($sdetails)
                 return response()->json(
                     [
                         'status' => true,
                         'message' => 'Created Successfully',
-                        'data' => $rooms
+                        'data' => $sdetails
                     ]
                 );
 
@@ -95,22 +90,31 @@ class RoomController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Room $room)
+    public function show(SaleDetail $saleDetail)
     {
         //
         try {
-            $rooms = Room::with([
-                'room_pictures',
-                'reservations'
+            $sdetails = SaleDetail::with([
+                'sales',
+                'products',
             ])
-                ->findOrFail($room->room_id);
+                ->findOrFail($saleDetail->sale_detail_id);
 
-            return response()->json(
-                [
-                    'status' => true,
-                    'data' => $rooms
-                ]
-            );
+            if ($sdetails != '[]')
+                return response()->json(
+                    [
+                        'status' => true,
+                        'data' => $sdetails
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'No data'
+                    ]
+                );
         } catch (\Exception $e) {
             return response()->json(
                 [
@@ -124,39 +128,26 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, SaleDetail $saleDetail)
     {
         //
         try {
-            $rooms = Room::findOrFail($room->room_id);
-            $rooms->update(
+            $sdetails = $saleDetail::findOrFail($saleDetail->sale_detail_id);
+            $sdetails->update(
                 [
-                    'room_type' => $request->room_type,
-                    'room_name' => 'ROOM-' . sprintf('%03d', $request->room_name),
-                    'price' => $request->price,
-                    'is_ac' => $request->is_ac,
-                    'capacity' => $request->capacity,
-                    'size' => $request->size,
-                    'discount_rate' => $request->discount_rate,
-                    'is_booked' => $request->is_booked,
-                    'status' => $request->status,
+                    'sale_id' => $request->sale_id,
+                    'product_id' => $request->product_id,
+                    'quantity' => $request->quantity,
+                    'amount' => $request->amount,
                 ]
             );
 
-            if (isset($rooms))
+            if ($sdetails)
                 return response()->json(
                     [
                         'status' => true,
                         'message' => 'Updated Successfully',
-                        'data' => $rooms
-                    ]
-                );
-
-            else
-                return response()->json(
-                    [
-                        'status' => false,
-                        'message' => 'failed'
+                        'data' => $sdetails
                     ]
                 );
         } catch (\Exception $e) {
@@ -172,20 +163,21 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Room $room)
+    public function destroy(SaleDetail $saleDetail)
     {
         //
         try {
-            $rooms = Room::findOrFail($room->room_id);
-            $rooms->delete();
+            $sdetails = $saleDetail::findOrFail($saleDetail->sale_detail_id);
+            $sdetails->delete();
 
-            return response()->json(
-                [
-                    'status' => true,
-                    'message' => 'Deleted Successfully',
-                    'data' => $rooms
-                ]
-            );
+            if ($sdetails)
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Updated Successfully',
+                        'data' => $sdetails
+                    ]
+                );
         } catch (\Exception $e) {
             return response()->json(
                 [

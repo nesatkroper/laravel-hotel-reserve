@@ -14,8 +14,10 @@ class CustomerController extends Controller
     {
         //
         try {
-            $customers = Customer::with('reservations')
-                ->with('auth')
+            $customers = Customer::with([
+                'reservations',
+                'auth'
+            ])
                 ->where("account_status", '=', 'available')
                 ->get();
 
@@ -109,8 +111,10 @@ class CustomerController extends Controller
     {
         //
         try {
-            $customers = Customer::with('reservations')
-                ->with('auth')
+            $customers = Customer::with([
+                'reservations',
+                'auth'
+            ])
                 ->where("account_status", '=', 'available')
                 ->findOrFail($customer->customer_id);
 

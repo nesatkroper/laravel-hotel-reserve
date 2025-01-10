@@ -14,9 +14,11 @@ class ReservationController extends Controller
     {
         //
         try {
-            $reserve = Reservation::with('rooms')
-                ->with('customers')
-                ->with('employees')
+            $reserve = Reservation::with([
+                'rooms',
+                'customers',
+                'employees'
+            ])
                 ->get();
 
             if ($reserve != '[]')
@@ -144,9 +146,11 @@ class ReservationController extends Controller
     {
         //
         try {
-            $reserve = Reservation::with('rooms')
-                ->with('customers')
-                ->with('employees')
+            $reserve = Reservation::with([
+                'rooms',
+                'customers',
+                'employees'
+            ])
                 ->findOrFail($reservation->reservation_id);
 
             return response()->json(

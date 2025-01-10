@@ -14,10 +14,12 @@ class ReservationDetailController extends Controller
     {
         //
         try {
-            $rdetails = ReservationDetail::with('rooms')
-                ->with('reservations')
-                ->with('employees')
-                ->with('customers')
+            $rdetails = ReservationDetail::with([
+                'rooms',
+                'reservations',
+                'employees',
+                'customers'
+            ])
                 ->get();
 
             if ($rdetails != '[]')
@@ -95,10 +97,12 @@ class ReservationDetailController extends Controller
     {
         //
         try {
-            $rdetails = ReservationDetail::with('rooms')
-                ->with('reservations')
-                ->with('employees')
-                ->with('customers')
+            $rdetails = ReservationDetail::with([
+                'rooms',
+                'reservations',
+                'employees',
+                'customers'
+            ])
                 ->findOrFail($reservationDetail->reservation_detail_id);
 
             return response()->json(

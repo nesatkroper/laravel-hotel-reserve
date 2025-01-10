@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 
-class RoomController extends Controller
+class SaleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,17 +14,18 @@ class RoomController extends Controller
     {
         //
         try {
-            $rooms = Room::with([
-                'room_pictures',
-                'reservations'
+            $sales = Sale::with([
+                'employees',
+                'rooms',
+                'customers'
             ])
                 ->get();
 
-            if ($rooms != '[]')
+            if ($sales != '[]')
                 return response()->json(
                     [
                         'status' => true,
-                        'data' => $rooms
+                        'data' => $sales
                     ]
                 );
 
@@ -52,26 +53,24 @@ class RoomController extends Controller
     {
         //
         try {
-            $rooms = Room::create(
+            $sales = Sale::create(
                 [
-                    'room_type' => $request->room_type,
-                    'room_name' => 'ROOM-' . sprintf('%03d', $request->room_name),
-                    'price' => $request->price,
-                    'is_ac' => $request->is_ac,
-                    'capacity' => $request->capacity,
-                    'size' => $request->size,
+                    'employee_id' => $request->employee_id,
+                    'room_id' => $request->room_id,
+                    'customer_id' => $request->customer_id,
+                    'sale_date' => $request->sale_date,
                     'discount_rate' => $request->discount_rate,
-                    'is_booked' => $request->is_booked,
-                    'status' => $request->status,
+                    'total' => $request->total,
+                    'amount' => $request->amount,
                 ]
             );
 
-            if (isset($rooms))
+            if ($sales)
                 return response()->json(
                     [
                         'status' => true,
                         'message' => 'Created Successfully',
-                        'data' => $rooms
+                        'data' => $sales
                     ]
                 );
 
@@ -95,20 +94,21 @@ class RoomController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Room $room)
+    public function show(Sale $sale)
     {
         //
         try {
-            $rooms = Room::with([
-                'room_pictures',
-                'reservations'
+            $sale = Sale::with([
+                'employees',
+                'rooms',
+                'customers'
             ])
-                ->findOrFail($room->room_id);
+                ->findOrFail($sale->sale_id);
 
             return response()->json(
                 [
                     'status' => true,
-                    'data' => $rooms
+                    'data' => $sale
                 ]
             );
         } catch (\Exception $e) {
@@ -124,31 +124,29 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, Sale $sale)
     {
         //
         try {
-            $rooms = Room::findOrFail($room->room_id);
-            $rooms->update(
+            $sales = Sale::findOrFail($sale->sale_id);
+            $sales->update(
                 [
-                    'room_type' => $request->room_type,
-                    'room_name' => 'ROOM-' . sprintf('%03d', $request->room_name),
-                    'price' => $request->price,
-                    'is_ac' => $request->is_ac,
-                    'capacity' => $request->capacity,
-                    'size' => $request->size,
+                    'employee_id' => $request->employee_id,
+                    'room_id' => $request->room_id,
+                    'customer_id' => $request->customer_id,
+                    'sale_date' => $request->sale_date,
                     'discount_rate' => $request->discount_rate,
-                    'is_booked' => $request->is_booked,
-                    'status' => $request->status,
+                    'total' => $request->total,
+                    'amount' => $request->amount,
                 ]
             );
 
-            if (isset($rooms))
+            if ($sales)
                 return response()->json(
                     [
                         'status' => true,
                         'message' => 'Updated Successfully',
-                        'data' => $rooms
+                        'data' => $sales
                     ]
                 );
 
@@ -172,18 +170,18 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Room $room)
+    public function destroy(Sale $sale)
     {
         //
         try {
-            $rooms = Room::findOrFail($room->room_id);
-            $rooms->delete();
+            $sales = Sale::findOrFail($sale->sale_id);
+            $sales->delete();
 
             return response()->json(
                 [
                     'status' => true,
                     'message' => 'Deleted Successfully',
-                    'data' => $rooms
+                    'data' => $sales
                 ]
             );
         } catch (\Exception $e) {

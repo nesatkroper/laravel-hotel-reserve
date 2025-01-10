@@ -14,8 +14,10 @@ class EmployeeController extends Controller
     {
         //
         try {
-            $employees = Employee::with('reservations')
-                ->with('auth')
+            $employees = Employee::with([
+                'reservations',
+                'auth'
+            ])
                 ->where("account_status", '=', 'available')
                 ->get();
 
@@ -114,8 +116,10 @@ class EmployeeController extends Controller
     {
         //
         try {
-            $employees = Employee::with('reservations')
-                ->with('auth')
+            $employees = Employee::with([
+                'reservations',
+                'auth'
+            ])
                 ->where("account_status", '=', 'available')
                 ->findOrFail($employee->employee_id);
 

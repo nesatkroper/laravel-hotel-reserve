@@ -13,14 +13,36 @@ class ProductStockController extends Controller
     public function index()
     {
         //
-    }
+        try {
+            $stocks = ProductStock::with([
+                'products',
+                'suppliers'
+            ])
+                ->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+            if ($stocks != '[]')
+                return response()->json(
+                    [
+                        'status' => true,
+                        'data' => $stocks
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'No data'
+                    ]
+                );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     /**
@@ -29,6 +51,43 @@ class ProductStockController extends Controller
     public function store(Request $request)
     {
         //
+        try {
+            $stock = ProductStock::create(
+                [
+                    'product_id' => $request->product_id,
+                    'supplier_id' => $request->supplier_id,
+                    'inv_number' => $request->inv_number,
+                    'product_add' => $request->product_add,
+                    'add_price' => $request->add_price,
+                    'add_date' => $request->add_date,
+                    'memo' => $request->memo,
+                ]
+            );
+
+            if ($stock)
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Created Successfully',
+                        'data' => $stock
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => false,
+                        'message' => 'failed'
+                    ]
+                );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     /**
@@ -37,14 +96,27 @@ class ProductStockController extends Controller
     public function show(ProductStock $productStock)
     {
         //
-    }
+        try {
+            $stocks = ProductStock::with([
+                'products',
+                'suppliers'
+            ])
+                ->findOrFail($productStock->product_stock_id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ProductStock $productStock)
-    {
-        //
+            return response()->json(
+                [
+                    'status' => true,
+                    'data' => $stocks
+                ]
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     /**
@@ -53,6 +125,44 @@ class ProductStockController extends Controller
     public function update(Request $request, ProductStock $productStock)
     {
         //
+        try {
+            $stock = ProductStock::findOrFail($productStock->product_stock_id);
+            $stock->update(
+                [
+                    'product_id' => $request->product_id,
+                    'supplier_id' => $request->supplier_id,
+                    'inv_number' => $request->inv_number,
+                    'product_add' => $request->product_add,
+                    'add_price' => $request->add_price,
+                    'add_date' => $request->add_date,
+                    'memo' => $request->memo,
+                ]
+            );
+
+            if ($stock)
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Update Successfully',
+                        'data' => $stock
+                    ]
+                );
+
+            else
+                return response()->json(
+                    [
+                        'status' => false,
+                        'message' => 'failed'
+                    ]
+                );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     /**
@@ -61,5 +171,24 @@ class ProductStockController extends Controller
     public function destroy(ProductStock $productStock)
     {
         //
+        try {
+            $stocks = ProductStock::findOrFail($productStock->product_stock_id);
+            $stocks->delete();
+
+            return response()->json(
+                [
+                    'status' => true,
+                    'message' => 'Deleted Successfully',
+                    'data' => $stocks
+                ]
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage()
+                ]
+            );
+        }
     }
 }
