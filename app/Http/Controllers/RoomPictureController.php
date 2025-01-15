@@ -48,13 +48,11 @@ class RoomPictureController extends Controller
     public function store(Request $request)
     {
         //
+        $filename = null;
         if ($request->hasFile('picture')) {
             $file = $request->file('picture');
             $filename = 'rooms' .  time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('images/rooms'), $filename);
-            $request->merge(
-                ['picture' => $filename]
-            );
         }
 
         try {
@@ -62,7 +60,7 @@ class RoomPictureController extends Controller
                 [
                     'room_id' => $request->room_id,
                     'picture_name' => $request->picture_name,
-                    'picture' => $request->picture
+                    'picture' => $filename
                 ]
             );
 
@@ -83,6 +81,10 @@ class RoomPictureController extends Controller
                     ]
                 );
         } catch (\Exception $e) {
+            if ($filename) {
+                unlink(public_path('images/rooms/' . $filename));
+            }
+
             return response()->json(
                 [
                     'status' => false,
