@@ -49,8 +49,16 @@ class ProductCategoryController extends Controller
     {
         //
         try {
+            $filename = null;
+            if ($request->hasFile('picture')) {
+                $file = $request->file('picture');
+                $filename = 'category' .  time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images/category'), $filename);
+            }
+
             $pcategories = ProductCategory::create(
                 [
+                    'picture' => $filename,
                     'category_name' => $request->category_name,
                     'category_code' => 'CATE-' . sprintf('%03d',  $request->category_code),
                     'memo' => $request->memo,

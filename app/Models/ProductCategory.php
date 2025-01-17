@@ -12,6 +12,7 @@ class ProductCategory extends Model
     protected $primaryKey = 'product_category_id';
 
     protected  $fillable = [
+        'picture',
         'category_name',
         'category_code',
         'memo'

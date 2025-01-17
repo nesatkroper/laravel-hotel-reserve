@@ -50,13 +50,11 @@ class ProductController extends Controller
     {
         //
         try {
+            $filename = null;
             if ($request->hasFile('picture')) {
                 $file = $request->file('picture');
                 $filename = 'product' .  time() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('images/product'), $filename);
-                $request->merge(
-                    ['picture' => $filename]
-                );
             }
 
             $products = Product::create(
@@ -64,7 +62,7 @@ class ProductController extends Controller
                     'product_name' => $request->product_name,
                     'product_code' => 'PROD-' . sprintf('%03d', $request->product_code),
                     'product_category_id' => $request->product_category_id,
-                    'picture' => $request->picture,
+                    'picture' => $filename,
                     'price' => $request->price,
                     'discount_rate' => $request->discount_rate,
                     'status' => $request->status,
