@@ -18,6 +18,7 @@ class RoomController extends Controller
                 'room_pictures',
                 'reservations'
             ])
+                ->orderBy('room_id', 'desc')
                 ->get();
 
             if ($rooms != '[]')
@@ -164,7 +165,8 @@ class RoomController extends Controller
                 [
                     'status' => false,
                     'message' => $e->getMessage()
-                ]
+                ],
+                400
             );
         }
     }

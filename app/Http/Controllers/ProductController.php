@@ -16,6 +16,7 @@ class ProductController extends Controller
         try {
             $products = Product::with('categories')
                 ->where('status', '=', 'true')
+                ->orderBy('product_id', 'desc')
                 ->get();
 
             if ($products != '[]')
