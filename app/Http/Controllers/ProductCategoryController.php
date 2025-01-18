@@ -15,6 +15,7 @@ class ProductCategoryController extends Controller
         //
         try {
             $pcategories = ProductCategory::with('products')
+                ->orderBy('product_category_id', 'desc')
                 ->get();
 
             if ($pcategories != '[]')
