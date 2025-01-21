@@ -14,6 +14,7 @@ class DepartmentController extends Controller
     {
         try {
             $departments = Department::with('positions')
+                ->orderBy('department_id', 'desc')
                 ->get();
 
             if ($departments != '[]')
