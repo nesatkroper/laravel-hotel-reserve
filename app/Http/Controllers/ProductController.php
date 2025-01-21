@@ -61,7 +61,7 @@ class ProductController extends Controller
             $products = Product::create(
                 [
                     'product_name' => $request->product_name,
-                    'product_code' => 'PROD-' . sprintf('%03d', $request->product_code),
+                    'product_code' => 'PROD-' . sprintf('%05d', $request->product_code),
                     'product_category_id' => $request->product_category_id,
                     'picture' => $filename,
                     'price' => $request->price,
