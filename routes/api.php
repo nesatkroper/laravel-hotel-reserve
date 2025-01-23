@@ -5,6 +5,7 @@ use App\Http\Controllers\CloseShiftController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OpenShiftController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\ProductCategoryController;
@@ -41,3 +42,6 @@ ro::apiResource('/sale-detail', SaleDetailController::class);
 ro::apiResource('/bank-note', BankNoteController::class);
 ro::apiResource('/open-shift', OpenShiftController::class);
 ro::apiResource('/close-shift', CloseShiftController::class);
+
+// 
+ro::apiResource('/img', ImageController::class);

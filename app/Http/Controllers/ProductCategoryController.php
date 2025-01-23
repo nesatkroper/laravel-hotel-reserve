@@ -168,6 +168,14 @@ class ProductCategoryController extends Controller
         //
         try {
             $pcategory = ProductCategory::findOrFail($productCategory->product_category_id);
+
+            if ($pcategory->picture) {
+                $imagePath = public_path('images/category/' . $pcategory->picture);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+
             $pcategory->delete();
 
             if ($pcategory)

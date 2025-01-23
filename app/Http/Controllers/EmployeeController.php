@@ -16,7 +16,9 @@ class EmployeeController extends Controller
         try {
             $employees = Employee::with([
                 'reservations',
-                'auth'
+                'auth',
+                'positions',
+                'departments'
             ])
                 ->where("account_status", '=', 'available')
                 ->get();
@@ -53,13 +55,11 @@ class EmployeeController extends Controller
     {
         //
         try {
+            $filename = null;
             if ($request->hasFile('picture')) {
                 $file = $request->file('picture');
                 $filename = 'employee' .  time() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('images/employee'), $filename);
-                $request->merge(
-                    ['picture' => $filename]
-                );
             }
 
             $employees = Employee::create(
@@ -68,14 +68,14 @@ class EmployeeController extends Controller
                     'account_status' => $request->account_status,
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
-                    'picture' => $request->picture,
+                    'picture' => $filename,
                     'gender' => $request->gender,
                     'dob' => $request->dob,
                     'email' => $request->email,
                     'phone' => $request->phone,
                     'address' => $request->address,
                     'city' => $request->city,
-                    'status' => $request->status,
+                    'state' => $request->state,
                     'position' => $request->position,
                     'department' => $request->department,
                     'salary' => $request->salary,

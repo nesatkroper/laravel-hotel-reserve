@@ -24,8 +24,8 @@ class Employee extends Model
         'address',
         'city',
         'state',
-        'position',
-        'department',
+        'position_id',
+        'department_id',
         'salary',
         'hired_date'
     ];
@@ -43,5 +43,15 @@ class Employee extends Model
     public function reservation_details()
     {
         return $this->hasMany(ReservationDetail::class, 'reservation_detail_id');
+    }
+
+    public function departments()
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'department_id');
+    }
+
+    public function positions()
+    {
+        return $this->belongsTo(Position::class, 'position_id', 'position_id');
     }
 }

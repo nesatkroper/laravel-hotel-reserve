@@ -15,6 +15,7 @@ class PositionController extends Controller
         //
         try {
             $positions = Position::with('departments')
+                ->orderBy('position_id', 'desc')
                 ->get();
 
             if ($positions != '[]')

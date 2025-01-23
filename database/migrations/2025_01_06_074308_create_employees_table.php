@@ -25,8 +25,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->string('position')->nullable();
-            $table->string('department')->nullable();
+            $table->integer('position_id')->nullable();
+            $table->integer('department_id')->nullable();
             $table->decimal('salary', 10, 2);
             $table->date('hired_date')->nullable();
             $table->timestamps();
