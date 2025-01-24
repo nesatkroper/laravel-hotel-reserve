@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('employee_tbl', function (Blueprint $table) {
             $table->id('employee_id');
+            $table->string('employee_code')->unique()->nullable();
             $table->integer('auth_id');
             $table->enum('account_status', ['available', 'dormant'])->default('available');
             $table->string('first_name');

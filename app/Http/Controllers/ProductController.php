@@ -189,6 +189,10 @@ class ProductController extends Controller
         //
         try {
             $products = Product::findOrFail($product->product_id);
+
+            if ($products->picture && file_exists(public_path('images/product/' . $products->picture)))
+                unlink(public_path('images/product/' . $products->picture));
+
             $products->delete();
 
             if ($products)

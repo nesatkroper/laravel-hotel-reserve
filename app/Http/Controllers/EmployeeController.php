@@ -64,6 +64,7 @@ class EmployeeController extends Controller
 
             $employees = Employee::create(
                 [
+                    'employee_code' => $request->employee_code,
                     'auth_id' => $request->auth_id,
                     'account_status' => $request->account_status,
                     'first_name' => $request->first_name,
@@ -211,6 +212,13 @@ class EmployeeController extends Controller
         //
         try {
             $employees = Employee::findOrFail($employee->employee_id);
+
+            if ($employees->picture) {
+                $imagePath = public_path('images/employee/' . $employees->picture);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
             $employees->delete();
 
             return response()->json(

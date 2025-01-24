@@ -172,6 +172,9 @@ class RoomPictureController extends Controller
         //
         try {
             $rpicture = RoomPicture::findOrFail($roomPicture->room_picture_id);
+
+            if ($rpicture->picture && file_exists(public_path('images/rooms/' . $rpicture->picture)))
+                unlink(public_path('images/rooms/' . $roomPicture->picture));
             $rpicture->delete();
 
             return response()->json(
