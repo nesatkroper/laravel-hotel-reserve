@@ -66,7 +66,7 @@ class ProductCategoryController extends Controller
                 ]
             );
 
-            if ($pcategories)
+            if ($pcategories) {
                 return response()->json(
                     [
                         'status' => true,
@@ -74,20 +74,27 @@ class ProductCategoryController extends Controller
                         'data' => $pcategories
                     ]
                 );
+            } else {
 
-            else
+                if ($filename && file_exists(public_path('images/category/' . $filename))) {
+                    unlink(public_path('images/category/' . $filename));
+                }
                 return response()->json(
                     [
                         'status' => false,
                         'message' => 'failed'
-                    ]
+                    ],
+                    400
                 );
+            }
         } catch (\Exception $e) {
+
             return response()->json(
                 [
                     'status' => false,
                     'message' => $e->getMessage()
-                ]
+                ],
+                400
             );
         }
     }
