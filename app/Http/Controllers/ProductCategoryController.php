@@ -72,7 +72,7 @@ class ProductCategoryController extends Controller
                         'status' => true,
                         'message' => 'Created Successfully',
                         'data' => $pcategories
-                    ]
+                    ],
                 );
             } else {
 
