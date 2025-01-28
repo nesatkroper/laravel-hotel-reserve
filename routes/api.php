@@ -35,6 +35,11 @@ ro::middleware('auth:sanctum')->group(function () {
     ro::get('/me', [AuthController::class, 'me']);
 });
 
+//! COUNT FOR ALERT NOTIFICATION
+ro::middleware('throttle:10,1')->group(function () {
+    ro::get('/room-count', [RoomController::class, 'count']);
+});
+
 
 
 ro::apiResource('/reservation', ReservationController::class);

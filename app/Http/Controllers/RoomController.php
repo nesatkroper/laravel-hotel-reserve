@@ -10,6 +10,15 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function count()
+    {
+        $count = Room::count();
+
+        if ($count > 0)
+            return response()->json(['count' => $count, 'status' => true]);
+        else return response()->json(['count' => 0, 'status' => false]);
+    }
+
     public function index()
     {
         //
