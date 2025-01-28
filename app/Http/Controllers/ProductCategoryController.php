@@ -136,7 +136,7 @@ class ProductCategoryController extends Controller
             $pcategory->update(
                 [
                     'category_name' => $request->category_name,
-                    'category_code' => 'CATE-' . sprintf('%03d',  $request->category_code),
+                    'category_code' => $request->category_code,
                     'memo' => $request->memo,
                 ]
             );
@@ -155,14 +155,14 @@ class ProductCategoryController extends Controller
                     [
                         'status' => false,
                         'message' => 'failed'
-                    ]
+                    ], 400
                 );
         } catch (\Exception $e) {
             return response()->json(
                 [
                     'status' => false,
                     'message' => $e->getMessage()
-                ]
+                ], 400
             );
         }
     }

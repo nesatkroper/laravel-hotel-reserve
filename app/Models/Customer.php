@@ -32,7 +32,7 @@ class Customer extends Model
 
     public function auth()
     {
-        return $this->belongsTo(User::class, 'id', 'customer_id');
+        return $this->belongsTo(User::class, 'auth_id', 'customer_id');
     }
 
     public function reservation_details()

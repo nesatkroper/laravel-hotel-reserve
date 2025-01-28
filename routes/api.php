@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankNoteController;
 use App\Http\Controllers\CloseShiftController;
 use App\Http\Controllers\CustomerController;
@@ -21,9 +22,20 @@ use App\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route as ro;
 
-ro::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// ! AUTHENTICATION AND AUTHORIZATION ROUTE FOR START SESSION
+ro::post('/register', [AuthController::class, 'register'])->name('register');
+ro::post('/login', [AuthController::class, 'login'])->name('login');
+
+// ! MIDDLEWARE FOR THAT AUTHENTICATION AND AUTHORIZATION
+ro::middleware('auth:sanctum')->group(function () {
+    ro::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    ro::post('/logout', [AuthController::class, 'logout']);
+    ro::get('/me', [AuthController::class, 'me']);
+});
+
+
 
 ro::apiResource('/reservation', ReservationController::class);
 ro::apiResource('/room', RoomController::class);

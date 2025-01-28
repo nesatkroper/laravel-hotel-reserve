@@ -38,7 +38,7 @@ class Employee extends Model
 
     public function auth()
     {
-        return $this->belongsTo(User::class, 'id', 'employee_id');
+        return $this->belongsTo(User::class, 'auth_id', 'employee_id');
     }
 
     public function reservation_details()
